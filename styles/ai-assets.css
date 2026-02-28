@@ -1,0 +1,155 @@
+/* ai-assets.css */
+
+body.assets-body {
+  background-color: #050505;
+  /* Deep space black */
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevents native scrollbars */
+  font-family: var(--font-primary, 'Inter', sans-serif);
+
+  /* Prevent highlight and selection while dragging */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  /* Disables default touch actions like pinch-zoom on mobile */
+}
+
+/* Floating HUD */
+.assets-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 2.5rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  pointer-events: none;
+  /* Let dragging strokes pass through... */
+  box-sizing: border-box;
+}
+
+/* ...but make the links clickable! */
+.assets-nav__back,
+.assets-nav__title {
+  pointer-events: auto;
+}
+
+.assets-nav__back {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.2px;
+}
+
+.assets-nav__back:hover {
+  opacity: 1;
+  transform: translateX(-5px);
+}
+
+.assets-nav__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.8;
+  font-family: 'Inter', sans-serif;
+}
+
+/* 2D Canvas Layer */
+.assets-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.assets-canvas:active {
+  cursor: grabbing !important;
+}
+
+.assets-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Using 3D hardware acceleration flag to smooth out panning on all browsers */
+  transform: translateZ(0);
+}
+
+/* The Glassmorphism Asset Card */
+.asset-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Optimize GPU rendering */
+  will-change: transform;
+
+  /* Premium Glass style */
+  border-radius: 32px;
+  background-color: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+
+  /* Fast CSS transitions for hover state */
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
+}
+
+/* Hover effect on the card */
+.asset-item:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 120px rgba(230, 40, 40, 0.35);
+  /* Red glass glow */
+  background-color: rgba(255, 255, 255, 0.04);
+  z-index: 10;
+}
+
+/* The actual 3D icon */
+.asset-item img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  /* Adds a shadow perfectly hugging the Alpha channel of the PNG */
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.6));
+
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.6s ease;
+}
+
+/* Pop the 3D element out on hover */
+.asset-item:hover img {
+  transform: scale(1.15) translateY(-15px) rotate(-2deg);
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.8));
+}
+
+/* Mobile responsivitiy */
+@media (max-width: 768px) {
+  .assets-nav {
+    padding: 1.5rem;
+  }
+
+  .asset-item {
+    width: 240px;
+    height: 240px;
+  }
+}
