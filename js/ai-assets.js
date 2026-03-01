@@ -21,17 +21,25 @@ function initInfiniteCanvas() {
         "assets/images/hobby-sneakers.png",
         "assets/images/hobby-table.png",
         "assets/images/intract-icon.png",
-        "assets/images/z42-icon-2.png"
+        "assets/images/z42-icon-2.png",
+        "assets/images/banjaro-hover-1.png",
+        "assets/images/mobile-auto-3d.png",
+        "assets/images/toy-museum-int.png",
+        "assets/images/toy-museum-ext.png",
+        "assets/images/z42-card-website.png",
+        "assets/images/z42labs.png",
+        "assets/images/intract-card.png",
+        "assets/images/banjaro-hover-2.png"
     ];
 
-    // Responsive item sizing
+    // Responsive item sizing (matching updated CSS sizes)
     const isMobile = window.innerWidth <= 768;
-    const itemWidth = isMobile ? 240 : 320;
-    const itemHeight = isMobile ? 240 : 320;
+    const itemWidth = isMobile ? 120 : 160;
+    const itemHeight = isMobile ? 120 : 160;
 
-    // Gap between items
-    const gapX = isMobile ? 60 : 120;
-    const gapY = isMobile ? 60 : 120;
+    // Tighter gap between items to match thiings.co dense look
+    const gapX = isMobile ? 24 : 32;
+    const gapY = isMobile ? 24 : 32;
 
     const cellW = itemWidth + gapX;
     const cellH = itemHeight + gapY;
