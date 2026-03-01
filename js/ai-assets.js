@@ -7,29 +7,32 @@ function initInfiniteCanvas() {
     const grid = document.getElementById('assets-grid');
     if (!canvas || !grid) return;
 
+    // Helper function to resolve URLs so Vite bundles them properly in production
+    const getAssetUrl = (name) => new URL(`../assets/images/${name}`, import.meta.url).href;
+
     // Ordered list of the AI Assets provided by user
     const assets = [
-        "assets/images/about-backpack.png",
-        "assets/images/10k-icon.png",
-        "assets/images/arch-icon.png",
-        "assets/images/banjaro-ui.png",
-        "assets/images/hobby-backpack.png",
-        "assets/images/hobby-headphones.png",
-        "assets/images/hobby-lamp.png",
-        "assets/images/hobby-microphone.png",
-        "assets/images/hobby-skateboard.png",
-        "assets/images/hobby-sneakers.png",
-        "assets/images/hobby-table.png",
-        "assets/images/intract-icon.png",
-        "assets/images/z42-icon-2.png",
-        "assets/images/banjaro-hover-1.png",
-        "assets/images/mobile-auto-3d.png",
-        "assets/images/toy-museum-int.png",
-        "assets/images/toy-museum-ext.png",
-        "assets/images/z42-card-website.png",
-        "assets/images/z42labs.png",
-        "assets/images/intract-card.png",
-        "assets/images/banjaro-hover-2.png"
+        getAssetUrl("about-backpack.png"),
+        getAssetUrl("10k-icon.png"),
+        getAssetUrl("arch-icon.png"),
+        getAssetUrl("banjaro-ui.png"),
+        getAssetUrl("hobby-backpack.png"),
+        getAssetUrl("hobby-headphones.png"),
+        getAssetUrl("hobby-lamp.png"),
+        getAssetUrl("hobby-microphone.png"),
+        getAssetUrl("hobby-skateboard.png"),
+        getAssetUrl("hobby-sneakers.png"),
+        getAssetUrl("hobby-table.png"),
+        getAssetUrl("intract-icon.png"),
+        getAssetUrl("z42-icon-2.png"),
+        getAssetUrl("banjaro-hover-1.png"),
+        getAssetUrl("mobile-auto-3d.png"),
+        getAssetUrl("toy-museum-int.png"),
+        getAssetUrl("toy-museum-ext.png"),
+        getAssetUrl("z42-card-website.png"),
+        getAssetUrl("z42labs.png"),
+        getAssetUrl("intract-card.png"),
+        getAssetUrl("banjaro-hover-2.png")
     ];
 
     // Responsive item sizing (matching updated CSS sizes)
