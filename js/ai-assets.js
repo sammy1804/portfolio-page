@@ -34,12 +34,12 @@ function initInfiniteCanvas() {
 
     // Responsive item sizing (matching updated CSS sizes)
     const isMobile = window.innerWidth <= 768;
-    const itemWidth = isMobile ? 120 : 160;
-    const itemHeight = isMobile ? 120 : 160;
+    const itemWidth = isMobile ? 80 : 120;
+    const itemHeight = isMobile ? 80 : 120;
 
     // Tighter gap between items to match thiings.co dense look
-    const gapX = isMobile ? 24 : 32;
-    const gapY = isMobile ? 24 : 32;
+    const gapX = isMobile ? 16 : 24;
+    const gapY = isMobile ? 16 : 24;
 
     const cellW = itemWidth + gapX;
     const cellH = itemHeight + gapY;
