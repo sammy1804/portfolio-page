@@ -76,35 +76,47 @@ function initInfiniteCanvas() {
 
     // Check if an asset is valid for this spot (no identical repeats within distance 2)
     const isValid = (r, c, asset) => {
-        // Horizontal checks
         if (c > 0 && gridAssignment[r][c - 1] === asset) return false;
         if (c > 1 && gridAssignment[r][c - 2] === asset) return false;
-        // Vertical checks
         if (r > 0 && gridAssignment[r - 1][c] === asset) return false;
         if (r > 1 && gridAssignment[r - 2][c] === asset) return false;
-        // Diagonal checks
         if (r > 0 && c > 0 && gridAssignment[r - 1][c - 1] === asset) return false;
         if (r > 0 && c < numCols - 1 && gridAssignment[r - 1][c + 1] === asset) return false;
         return true;
     };
 
+    let shuffledBag = shuffleArray(assets);
+    let bagIndex = 0;
+
     for (let row = 0; row < numRows; row++) {
         gridAssignment[row] = [];
         for (let col = 0; col < numCols; col++) {
 
-            // Pick a random asset that doesn't conflict
+            // Pick next asset from the shuffled bag to guarantee equal distribution
             let chosenAsset = null;
             let attempts = 0;
-            // Shuffle assets and find the first one that fits the rules
-            while (!chosenAsset && attempts < 50) {
-                let candidate = assets[Math.floor(Math.random() * assets.length)];
+
+            while (!chosenAsset && attempts < assets.length) {
+                if (bagIndex >= shuffledBag.length) {
+                    shuffledBag = shuffleArray(assets);
+                    bagIndex = 0;
+                }
+
+                let candidate = shuffledBag[bagIndex];
                 if (isValid(row, col, candidate)) {
                     chosenAsset = candidate;
+                    bagIndex++;
+                } else {
+                    // Try the next one in the bag
+                    bagIndex++;
+                    attempts++;
                 }
-                attempts++;
             }
+
             // Fallback just in case rules are too tight
-            if (!chosenAsset) chosenAsset = assets[Math.floor(Math.random() * assets.length)];
+            if (!chosenAsset) {
+                chosenAsset = assets[Math.floor(Math.random() * assets.length)];
+            }
 
             gridAssignment[row][col] = chosenAsset;
 
@@ -234,19 +246,22 @@ function initInfiniteCanvas() {
     // === LIGHTBOX LOGIC ===
     const lightbox = document.createElement('div');
     lightbox.className = 'lightbox';
+    // We create a slider track that holds exactly 3 images at all times (prev, current, next)
     lightbox.innerHTML = `
         <div class="lightbox-close">&times;</div>
         <div class="lightbox-container">
             <div class="lightbox-arrow lightbox-prev">&#10094;</div>
-            <div class="lightbox-content">
-                <div class="lightbox-preview-left">
-                    <img src="" class="lightbox-img-left" alt="Previous">
-                </div>
-                <div class="lightbox-main">
-                    <img src="" class="lightbox-img-main" alt="Current">
-                </div>
-                <div class="lightbox-preview-right">
-                    <img src="" class="lightbox-img-right" alt="Next">
+            <div class="lightbox-slider-wrapper">
+                <div class="lightbox-slider-track">
+                    <div class="lightbox-slide clone-left">
+                        <img src="" class="lightbox-img-left" alt="Previous">
+                    </div>
+                    <div class="lightbox-slide slide-main">
+                        <img src="" class="lightbox-img-main" alt="Current">
+                    </div>
+                    <div class="lightbox-slide clone-right">
+                        <img src="" class="lightbox-img-right" alt="Next">
+                    </div>
                 </div>
             </div>
             <div class="lightbox-arrow lightbox-next">&#10095;</div>
@@ -261,7 +276,7 @@ function initInfiniteCanvas() {
         clearInterval(lightboxTimer);
         lightboxTimer = setInterval(() => {
             if (lightbox.classList.contains('active')) {
-                updateLightbox((activeLightboxIndex + 1) % assets.length);
+                slideTo('next');
             }
         }, 3000); // 3 seconds auto-scroll
     };
@@ -270,23 +285,44 @@ function initInfiniteCanvas() {
         clearInterval(lightboxTimer);
     };
 
-    const updateLightbox = (index) => {
-        if (assets.length === 0) return;
+    const track = lightbox.querySelector('.lightbox-slider-track');
+    let isSliding = false;
 
-        const mainImg = lightbox.querySelector('.lightbox-img-main');
-        mainImg.style.opacity = '0';
+    // Set initial track position
+    track.style.transform = 'translateX(-33.333%)';
 
+    const renderLightboxImages = (index) => {
+        let prevIndex = (index - 1 + assets.length) % assets.length;
+        let nextIndex = (index + 1) % assets.length;
+
+        lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
+        lightbox.querySelector('.lightbox-img-main').src = assets[index];
+        lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
+
+        activeLightboxIndex = index;
+
+        // Ensure track is in center without animation
+        track.style.transition = 'none';
+        track.style.transform = 'translateX(-33.333%)';
+    };
+
+    const slideTo = (direction) => {
+        if (isSliding || assets.length === 0) return;
+        isSliding = true;
+
+        const newIndex = direction === 'next'
+            ? (activeLightboxIndex + 1) % assets.length
+            : (activeLightboxIndex - 1 + assets.length) % assets.length;
+
+        // Slide the track
+        track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        track.style.transform = direction === 'next' ? 'translateX(-66.666%)' : 'translateX(0%)';
+
+        // Wait for animation, then swap images instantly and snap back
         setTimeout(() => {
-            let prevIndex = (index - 1 + assets.length) % assets.length;
-            let nextIndex = (index + 1) % assets.length;
-
-            lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
-            mainImg.src = assets[index];
-            lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
-
-            activeLightboxIndex = index;
-            mainImg.style.opacity = '1';
-        }, 300);
+            renderLightboxImages(newIndex);
+            isSliding = false;
+        }, 600); // match CSS transition duration
     };
 
     lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
@@ -295,22 +331,22 @@ function initInfiniteCanvas() {
     });
 
     lightbox.querySelector('.lightbox-prev').addEventListener('click', () => {
-        updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+        slideTo('prev');
         resetTimer();
     });
 
     lightbox.querySelector('.lightbox-next').addEventListener('click', () => {
-        updateLightbox((activeLightboxIndex + 1) % assets.length);
+        slideTo('next');
         resetTimer();
     });
 
-    lightbox.querySelector('.lightbox-preview-left').addEventListener('click', () => {
-        updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+    lightbox.querySelector('.clone-left').addEventListener('click', () => {
+        slideTo('prev');
         resetTimer();
     });
 
-    lightbox.querySelector('.lightbox-preview-right').addEventListener('click', () => {
-        updateLightbox((activeLightboxIndex + 1) % assets.length);
+    lightbox.querySelector('.clone-right').addEventListener('click', () => {
+        slideTo('next');
         resetTimer();
     });
 
@@ -319,10 +355,10 @@ function initInfiniteCanvas() {
         if (!lightbox.classList.contains('active')) return;
 
         if (e.key === 'ArrowLeft') {
-            updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+            slideTo('prev');
             resetTimer();
         } else if (e.key === 'ArrowRight') {
-            updateLightbox((activeLightboxIndex + 1) % assets.length);
+            slideTo('next');
             resetTimer();
         } else if (e.key === 'Escape') {
             lightbox.classList.remove('active');
@@ -350,14 +386,7 @@ function initInfiniteCanvas() {
             const idx = parseInt(item.dataset.assetIndex, 10);
 
             // Pre-set images instantly before showing
-            let prevIndex = (idx - 1 + assets.length) % assets.length;
-            let nextIndex = (idx + 1) % assets.length;
-            lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
-            lightbox.querySelector('.lightbox-img-main').src = assets[idx];
-            lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
-
-            activeLightboxIndex = idx;
-            lightbox.querySelector('.lightbox-img-main').style.opacity = '1';
+            renderLightboxImages(idx);
 
             lightbox.classList.add('active');
             resetTimer();
