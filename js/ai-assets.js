@@ -12,37 +12,45 @@ function initInfiniteCanvas() {
 
     // Ordered list of the AI Assets provided by user
     const assets = [
-        getAssetUrl("about-backpack.png"),
-        getAssetUrl("10k-icon.png"),
-        getAssetUrl("arch-icon.png"),
-        getAssetUrl("banjaro-ui.png"),
-        getAssetUrl("hobby-backpack.png"),
-        getAssetUrl("hobby-headphones.png"),
-        getAssetUrl("hobby-lamp.png"),
-        getAssetUrl("hobby-microphone.png"),
-        getAssetUrl("hobby-skateboard.png"),
-        getAssetUrl("hobby-sneakers.png"),
-        getAssetUrl("hobby-table.png"),
-        getAssetUrl("intract-icon.png"),
-        getAssetUrl("z42-icon-2.png"),
-        getAssetUrl("banjaro-hover-1.png"),
-        getAssetUrl("mobile-auto-3d.png"),
-        getAssetUrl("toy-museum-int.png"),
-        getAssetUrl("toy-museum-ext.png"),
-        getAssetUrl("z42-card-website.png"),
-        getAssetUrl("z42labs.png"),
-        getAssetUrl("intract-card.png"),
-        getAssetUrl("banjaro-hover-2.png")
+        getAssetUrl("ai-assets/ai_asset_1.png"),
+        getAssetUrl("ai-assets/ai_asset_2.png"),
+        getAssetUrl("ai-assets/ai_asset_3.png"),
+        getAssetUrl("ai-assets/ai_asset_4.png"),
+        getAssetUrl("ai-assets/ai_asset_5.png"),
+        getAssetUrl("ai-assets/ai_asset_6.png"),
+        getAssetUrl("ai-assets/ai_asset_7.png"),
+        getAssetUrl("ai-assets/ai_asset_8.png"),
+        getAssetUrl("ai-assets/ai_asset_9.png"),
+        getAssetUrl("ai-assets/ai_asset_10.png"),
+        getAssetUrl("ai-assets/ai_asset_11.png"),
+        getAssetUrl("ai-assets/ai_asset_12.png"),
+        getAssetUrl("ai-assets/ai_asset_13.png"),
+        getAssetUrl("ai-assets/ai_asset_14.png"),
+        getAssetUrl("ai-assets/ai_asset_15.png"),
+        getAssetUrl("ai-assets/ai_asset_16.png"),
+        getAssetUrl("ai-assets/ai_asset_17.png"),
+        getAssetUrl("ai-assets/ai_asset_18.png"),
+        getAssetUrl("ai-assets/ai_asset_19.png"),
+        getAssetUrl("ai-assets/ai_asset_20.png"),
+        getAssetUrl("ai-assets/ai_asset_21.png"),
+        getAssetUrl("ai-assets/ai_asset_22.png"),
+        getAssetUrl("ai-assets/ai_asset_23.png"),
+        getAssetUrl("ai-assets/ai_asset_24.png"),
+        getAssetUrl("ai-assets/ai_asset_25.png"),
+        getAssetUrl("ai-assets/ai_asset_26.png"),
+        getAssetUrl("ai-assets/ai_asset_27.png"),
+        getAssetUrl("ai-assets/ai_asset_28.png"),
+        getAssetUrl("ai-assets/ai_asset_29.png"),
+        getAssetUrl("ai-assets/ai_asset_30.png")
     ];
 
-    // Responsive item sizing (matching updated CSS sizes)
+    // Responsive item sizing & tighter spacing for clean masonry layout
     const isMobile = window.innerWidth <= 768;
-    const itemWidth = isMobile ? 80 : 120;
-    const itemHeight = isMobile ? 80 : 120;
+    const itemWidth = isMobile ? 100 : 160;
+    const itemHeight = isMobile ? 100 : 160;
 
-    // Tighter gap between items to match thiings.co dense look
-    const gapX = isMobile ? 16 : 24;
-    const gapY = isMobile ? 16 : 24;
+    const gapX = isMobile ? 24 : 48;
+    const gapY = isMobile ? 24 : 48;
 
     const cellW = itemWidth + gapX;
     const cellH = itemHeight + gapY;
@@ -103,14 +111,16 @@ function initInfiniteCanvas() {
             const el = document.createElement('div');
             el.className = 'asset-item';
 
+            // Assign data attribute for lightbox handling
+            el.dataset.assetIndex = assets.indexOf(chosenAsset);
+
             const img = document.createElement('img');
             img.src = chosenAsset;
             img.alt = 'AI Asset';
 
-            // Give them a slight non-linear random offset within the grid to look "scattered" 
-            const offsetLimit = isMobile ? 20 : 50;
-            const randomOffsetX = (Math.random() - 0.5) * offsetLimit;
-            const randomOffsetY = (Math.random() - 0.5) * offsetLimit;
+            // No random offsets for a clean grid mapping like thiings.co 
+            const randomOffsetX = 0;
+            const randomOffsetY = 0;
 
             el.appendChild(img);
             grid.appendChild(el);
@@ -220,6 +230,139 @@ function initInfiniteCanvas() {
 
         requestAnimationFrame(update);
     }
+
+    // === LIGHTBOX LOGIC ===
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    lightbox.innerHTML = `
+        <div class="lightbox-close">&times;</div>
+        <div class="lightbox-container">
+            <div class="lightbox-arrow lightbox-prev">&#10094;</div>
+            <div class="lightbox-content">
+                <div class="lightbox-preview-left">
+                    <img src="" class="lightbox-img-left" alt="Previous">
+                </div>
+                <div class="lightbox-main">
+                    <img src="" class="lightbox-img-main" alt="Current">
+                </div>
+                <div class="lightbox-preview-right">
+                    <img src="" class="lightbox-img-right" alt="Next">
+                </div>
+            </div>
+            <div class="lightbox-arrow lightbox-next">&#10095;</div>
+        </div>
+    `;
+    document.body.appendChild(lightbox);
+
+    let activeLightboxIndex = 0;
+    let lightboxTimer = null;
+
+    const resetTimer = () => {
+        clearInterval(lightboxTimer);
+        lightboxTimer = setInterval(() => {
+            if (lightbox.classList.contains('active')) {
+                updateLightbox((activeLightboxIndex + 1) % assets.length);
+            }
+        }, 3000); // 3 seconds auto-scroll
+    };
+
+    const clearTimer = () => {
+        clearInterval(lightboxTimer);
+    };
+
+    const updateLightbox = (index) => {
+        if (assets.length === 0) return;
+
+        const mainImg = lightbox.querySelector('.lightbox-img-main');
+        mainImg.style.opacity = '0';
+
+        setTimeout(() => {
+            let prevIndex = (index - 1 + assets.length) % assets.length;
+            let nextIndex = (index + 1) % assets.length;
+
+            lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
+            mainImg.src = assets[index];
+            lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
+
+            activeLightboxIndex = index;
+            mainImg.style.opacity = '1';
+        }, 300);
+    };
+
+    lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        clearTimer();
+    });
+
+    lightbox.querySelector('.lightbox-prev').addEventListener('click', () => {
+        updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+        resetTimer();
+    });
+
+    lightbox.querySelector('.lightbox-next').addEventListener('click', () => {
+        updateLightbox((activeLightboxIndex + 1) % assets.length);
+        resetTimer();
+    });
+
+    lightbox.querySelector('.lightbox-preview-left').addEventListener('click', () => {
+        updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+        resetTimer();
+    });
+
+    lightbox.querySelector('.lightbox-preview-right').addEventListener('click', () => {
+        updateLightbox((activeLightboxIndex + 1) % assets.length);
+        resetTimer();
+    });
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === 'ArrowLeft') {
+            updateLightbox((activeLightboxIndex - 1 + assets.length) % assets.length);
+            resetTimer();
+        } else if (e.key === 'ArrowRight') {
+            updateLightbox((activeLightboxIndex + 1) % assets.length);
+            resetTimer();
+        } else if (e.key === 'Escape') {
+            lightbox.classList.remove('active');
+            clearTimer();
+        }
+    });
+
+    // Detect Click vs Drag
+    let dragDistance = 0;
+
+    canvas.addEventListener('mousedown', () => { dragDistance = 0; });
+    canvas.addEventListener('touchstart', () => { dragDistance = 0; }, { passive: true });
+
+    window.addEventListener('mousemove', (e) => {
+        if (isDragging) dragDistance += Math.abs(e.movementX) + Math.abs(e.movementY);
+    });
+
+    window.addEventListener('touchmove', (e) => {
+        if (isDragging) dragDistance += 5;
+    }, { passive: true });
+
+    grid.addEventListener('click', (e) => {
+        const item = e.target.closest('.asset-item');
+        if (item && dragDistance < 15) {
+            const idx = parseInt(item.dataset.assetIndex, 10);
+
+            // Pre-set images instantly before showing
+            let prevIndex = (idx - 1 + assets.length) % assets.length;
+            let nextIndex = (idx + 1) % assets.length;
+            lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
+            lightbox.querySelector('.lightbox-img-main').src = assets[idx];
+            lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
+
+            activeLightboxIndex = idx;
+            lightbox.querySelector('.lightbox-img-main').style.opacity = '1';
+
+            lightbox.classList.add('active');
+            resetTimer();
+        }
+    });
 
     // Kick off animation and start with an initial offset in the middle
     targetX = window.innerWidth / 2;
