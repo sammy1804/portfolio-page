@@ -246,23 +246,17 @@ function initInfiniteCanvas() {
     // === LIGHTBOX LOGIC ===
     const lightbox = document.createElement('div');
     lightbox.className = 'lightbox';
-    // We create a slider track that holds exactly 3 images at all times (prev, current, next)
+    // Coverflow UI with 5 elements total for smooth coming-in and fading-out
     lightbox.innerHTML = `
         <div class="lightbox-close">&times;</div>
         <div class="lightbox-container">
             <div class="lightbox-arrow lightbox-prev">&#10094;</div>
-            <div class="lightbox-slider-wrapper">
-                <div class="lightbox-slider-track">
-                    <div class="lightbox-slide clone-left">
-                        <img src="" class="lightbox-img-left" alt="Previous">
-                    </div>
-                    <div class="lightbox-slide slide-main">
-                        <img src="" class="lightbox-img-main" alt="Current">
-                    </div>
-                    <div class="lightbox-slide clone-right">
-                        <img src="" class="lightbox-img-right" alt="Next">
-                    </div>
-                </div>
+            <div class="lightbox-gallery">
+                <img src="" class="gallery-item" id="gallery-prev2" alt="Hidden Left">
+                <img src="" class="gallery-item" id="gallery-prev" alt="Previous">
+                <img src="" class="gallery-item" id="gallery-main" alt="Current">
+                <img src="" class="gallery-item" id="gallery-next" alt="Next">
+                <img src="" class="gallery-item" id="gallery-next2" alt="Hidden Right">
             </div>
             <div class="lightbox-arrow lightbox-next">&#10095;</div>
         </div>
@@ -271,6 +265,15 @@ function initInfiniteCanvas() {
 
     let activeLightboxIndex = 0;
     let lightboxTimer = null;
+
+    // Grab the 5 physical image nodes from DOM
+    let galleryItems = [
+        lightbox.querySelector('#gallery-prev2'),
+        lightbox.querySelector('#gallery-prev'),
+        lightbox.querySelector('#gallery-main'),
+        lightbox.querySelector('#gallery-next'),
+        lightbox.querySelector('#gallery-next2')
+    ];
 
     const resetTimer = () => {
         clearInterval(lightboxTimer);
@@ -285,44 +288,55 @@ function initInfiniteCanvas() {
         clearInterval(lightboxTimer);
     };
 
-    const track = lightbox.querySelector('.lightbox-slider-track');
-    let isSliding = false;
-
-    // Set initial track position
-    track.style.transform = 'translateX(-33.333%)';
-
     const renderLightboxImages = (index) => {
-        let prevIndex = (index - 1 + assets.length) % assets.length;
-        let nextIndex = (index + 1) % assets.length;
-
-        lightbox.querySelector('.lightbox-img-left').src = assets[prevIndex];
-        lightbox.querySelector('.lightbox-img-main').src = assets[index];
-        lightbox.querySelector('.lightbox-img-right').src = assets[nextIndex];
-
+        const len = assets.length;
+        galleryItems[0].src = assets[(index - 2 + len) % len];
+        galleryItems[1].src = assets[(index - 1 + len) % len];
+        galleryItems[2].src = assets[index];
+        galleryItems[3].src = assets[(index + 1) % len];
+        galleryItems[4].src = assets[(index + 2) % len];
         activeLightboxIndex = index;
-
-        // Ensure track is in center without animation
-        track.style.transition = 'none';
-        track.style.transform = 'translateX(-33.333%)';
     };
 
     const slideTo = (direction) => {
-        if (isSliding || assets.length === 0) return;
-        isSliding = true;
+        if (assets.length === 0) return;
+        const len = assets.length;
 
         const newIndex = direction === 'next'
-            ? (activeLightboxIndex + 1) % assets.length
-            : (activeLightboxIndex - 1 + assets.length) % assets.length;
+            ? (activeLightboxIndex + 1) % len
+            : (activeLightboxIndex - 1 + len) % len;
 
-        // Slide the track
-        track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
-        track.style.transform = direction === 'next' ? 'translateX(-66.666%)' : 'translateX(0%)';
+        // Cyclically shift the DOM elements array depending on direction
+        if (direction === 'next') {
+            let first = galleryItems.shift();
+            galleryItems.push(first);
+        } else {
+            let last = galleryItems.pop();
+            galleryItems.unshift(last);
+        }
 
-        // Wait for animation, then swap images instantly and snap back
-        setTimeout(() => {
-            renderLightboxImages(newIndex);
-            isSliding = false;
-        }, 600); // match CSS transition duration
+        // Re-assign CSS IDs to their new positions to physically trigger the 3D transitions
+        const ids = ['gallery-prev2', 'gallery-prev', 'gallery-main', 'gallery-next', 'gallery-next2'];
+        galleryItems.forEach((item, i) => {
+            item.id = ids[i];
+
+            // Re-assign click events correctly based on their current visible role
+            item.onclick = null; // reset
+            if (ids[i] === 'gallery-prev') {
+                item.onclick = () => { slideTo('prev'); resetTimer(); };
+            } else if (ids[i] === 'gallery-next') {
+                item.onclick = () => { slideTo('next'); resetTimer(); };
+            }
+        });
+
+        // Now populate the image srcs correctly so they are ready before they slide in
+        galleryItems[0].src = assets[(newIndex - 2 + len) % len];
+        galleryItems[1].src = assets[(newIndex - 1 + len) % len];
+        galleryItems[2].src = assets[newIndex];
+        galleryItems[3].src = assets[(newIndex + 1) % len];
+        galleryItems[4].src = assets[(newIndex + 2) % len];
+
+        activeLightboxIndex = newIndex;
     };
 
     lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
@@ -340,15 +354,9 @@ function initInfiniteCanvas() {
         resetTimer();
     });
 
-    lightbox.querySelector('.clone-left').addEventListener('click', () => {
-        slideTo('prev');
-        resetTimer();
-    });
-
-    lightbox.querySelector('.clone-right').addEventListener('click', () => {
-        slideTo('next');
-        resetTimer();
-    });
+    // Initial click assignments for the side clones
+    galleryItems[1].onclick = () => { slideTo('prev'); resetTimer(); };
+    galleryItems[3].onclick = () => { slideTo('next'); resetTimer(); };
 
     // Keyboard support
     window.addEventListener('keydown', (e) => {
