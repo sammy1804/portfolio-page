@@ -1098,10 +1098,9 @@ img {
   /* Gap between blocks */
   text-align: center;
   width: 100%;
-  padding-top: 50vh;
-  /* Much less padding so it enters screen faster */
-  padding-bottom: 50vh;
-  /* Also less padding at the end so it scrolls past faster */
+  padding-top: 15vh;
+  /* Reduced padding so text appears immediately when section starts */
+  padding-bottom: 30vh;
 }
 
 .skills__credit-block {
