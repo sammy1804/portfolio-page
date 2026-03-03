@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Samridhi Aggarwal — Design Portfolio (Dev)</title>
+  <title>Samridhi Aggarwal — About</title>
   <meta name="description"
     content="Portfolio of Samridhi Aggarwal — Brand Designer, Visual Designer, Product Designer. From architecture to digital ecosystems." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,8 +31,8 @@
   <!-- ===== NAVIGATION ===== -->
   <nav class="nav" id="nav">
     <div class="nav__left">
-      <a href="#work">Work</a>
-      <a href="about.html">About</a>
+      <a href="index.html#work">Work</a>
+      <a href="#about">About</a>
     </div>
     <div class="nav__center">Samridhi aggarwal</div>
     <div class="nav__right">
@@ -47,51 +47,6 @@
   
   
   
-
-<!-- ===== SECTION 1: HERO ===== -->
-  <section class="hero" id="hero">
-    <div class="hero__sticky">
-      <!-- Dark frame that holds everything -->
-      <div class="hero__frame" id="hero-frame">
-        <!-- Photo at 32% opacity, centered -->
-        <img src="assets/images/hero-photo.jpg" alt="Samridhi Aggarwal" class="hero__photo" />
-        <!-- Title text at bottom -->
-        <div class="hero__text">
-          <h1 class="hero__title">DESIGN PORTFOLIO</h1>
-          <div class="hero__line"></div>
-          <div class="hero__scroll-row">
-            <span class="hero__sparkle">✦</span>
-            <span class="hero__scroll-label">SCROLL TO EXPLORE</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 Floating cards (appear on scroll, positioned around the banner) -->
-      <div class="hero__cards" id="hero-cards">
-        <!-- 1: Maintain Streaks — top-left -->
-        <div class="hero__float-card hero__float-card--1">
-          <img src="assets/images/card-maintain-streaks.png" alt="Maintain your Streaks" />
-        </div>
-        <!-- 2: Daily Visit — top-right -->
-        <div class="hero__float-card hero__float-card--2">
-          <img src="assets/images/card-daily-visit.png" alt="Daily Visit" />
-        </div>
-        <!-- 3: Refer & Earn — bottom-left -->
-        <div class="hero__float-card hero__float-card--3">
-          <img src="assets/images/card-refer-earn.png" alt="Refer and Earn" />
-        </div>
-        <!-- 4: Follow on Socials — bottom-center -->
-        <div class="hero__float-card hero__float-card--4">
-          <img src="assets/images/card-follow-socials.png" alt="Follow on Socials" />
-        </div>
-        <!-- 5: Humanity Score — bottom-right -->
-        <div class="hero__float-card hero__float-card--5">
-          <img src="assets/images/card-humanity-score.png" alt="Humanity Score" />
-        </div>
-      </div>
-    </div>
-    <div class="hero__spacer"></div>
-  </section>
 
 <!-- ===== SECTION 2: ABOUT ===== -->
   <section class="about" id="about">
@@ -138,126 +93,6 @@
           <span>UI designer</span><span class="about__marquee-sep">■</span>
         </div>
       </div>
-    </div>
-  </section>
-
-<!-- ===== SECTION 5: MY WORK ===== -->
-  <section class="work" id="work">
-    <!-- Big background text sticky container -->
-    <div class="work__bg-container">
-      <div class="work__bg-text">MY WORK</div>
-    </div>
-
-    <div class="work__container">
-      <!-- Left Sticky Sidebar -->
-      <div class="work__sidebar-left">
-        <p class="work__sidebar-tag" id="work-sidebar-tags">Product Design &bull; Web3 &bull; Brand And Visuals</p>
-        <p class="work__sidebar-desc" id="work-sidebar-desc">Where trust is built through play, not explanation</p>
-        <a href="#" class="hobbies__cta work__cta-btn">View Project</a>
-      </div>
-
-      <!-- Center Scrolling Cards -->
-      <div class="work__cards-column">
-
-        <!-- TIER 1 -->
-        <div class="work__category-label"
-          style="padding: 2rem 0; font-family: var(--font-display); font-size: 2.5rem; color: var(--accent-red); letter-spacing: 2px;">
-          Tier 1 – Core Case Studies</div>
-        <p style="font-family: var(--font-alt); color: #666; margin-bottom: 3rem;">End-to-end ownership, product
-          thinking, and emotional narratives engineered for depth.</p>
-
-        <!-- 1. BANJARO -->
-        <div class="work__card" data-tags="End-to-end Ownership &bull; Product Thinking &bull; Emotional Narrative"
-          data-desc="Solving real travel problems, not just a cool idea"
-          data-right-text="From logo and branding straight through to app UX and design systems."
-          data-title="Banjaro App" data-title-dark="false" onclick="window.location.href='banjaro.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/banjaro.png" alt="Banjaro" loading="lazy" />
-        </div>
-
-        <!-- 2. INTRACT -->
-        <div class="work__card" data-tags="Rebranding &bull; Product Design &bull; Web3 Gamification"
-          data-desc="The credibility engine in action"
-          data-right-text="Contributed to rebranding system and gamified UX flows for quest-driven Web3 engagement."
-          data-title="Intract" data-title-dark="false" onclick="window.location.href='intract.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/intract.png" alt="Intract" loading="lazy" />
-        </div>
-
-        <!-- 3. Z42 LABS -->
-        <div class="work__card" data-tags="Structured Thinking &bull; System Mapping &bull; Service Architecture"
-          data-desc="High-end AI positioning"
-          data-right-text="Pioneering new interfaces for artificial intelligence through deep design maturity."
-          data-title="Z42 Labs" data-title-dark="false" onclick="window.location.href='z42.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/z42labs.png" alt="Z42 Labs" loading="lazy" />
-        </div>
-
-        <!-- TIER 2 -->
-        <div class="work__category-label"
-          style="padding: 4rem 0 2rem; border-top: 1px solid rgba(0,0,0,0.1); font-family: var(--font-display); font-size: 2.5rem; color: #111; letter-spacing: 2px;">
-          Tier 2 – Strategic Support</div>
-        <p style="font-family: var(--font-alt); color: #666; margin-bottom: 3rem;">Demonstrating strategic breadth,
-          market positioning, and designing across domains.</p>
-
-        <!-- 4. SARVOMA -->
-        <div class="work__card" data-tags="Logo &bull; Branding &bull; Market Positioning"
-          data-desc="Brand strategy logic and tone decisions"
-          data-right-text="Establishing identity that works perfectly with their market positioning."
-          data-title="Sarvoma" data-title-dark="true" onclick="window.location.href='sarvoma.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/sarvoma-home.png" alt="Sarvoma Placeholder" loading="lazy"
-            style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px; object-position: top;" />
-        </div>
-
-        <!-- 5. PROMENA META -->
-        <div class="work__card" data-tags="Enterprise Dashboards &bull; Websites &bull; Apps"
-          data-desc="Designing Across Domains – Promena"
-          data-right-text="Solo designer handling data density, role complexity, and diverse tonal shifts across B2B SaaS and B2C interfaces."
-          data-title="Promena" data-title-dark="false" onclick="window.location.href='flight-op.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/promena-banner.png" alt="Promena Umbrella Projects" loading="lazy"
-            style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;" />
-        </div>
-
-        <!-- EXPERIMENTS -->
-        <div class="work__category-label"
-          style="padding: 4rem 0 2rem; border-top: 1px solid rgba(0,0,0,0.1); font-family: var(--font-display); font-size: 2.5rem; color: #888; letter-spacing: 2px;">
-          Experiments</div>
-        <p style="font-family: var(--font-alt); color: #666; margin-bottom: 3rem;">AI as a creative multiplier,
-          curiosity-driven interactive builds, and visual prototyping.</p>
-
-        <!-- ARCHADE -->
-        <div class="work__card" data-tags="Experimental Build &bull; AI Assisted Interface System"
-          data-desc="Curiosity modeled into an interactive experience"
-          data-right-text="A vibe-coded architectural experiment acting as a playground outside serious product work."
-          data-title="Archade" data-title-dark="false"
-          onclick="window.open('https://aistudio.google.com/apps/drive/1Xv9MRrVhH7ZQVUxRe6zZnqs9Dia5KXpv?fullscreenApplet=true&showPreview=true&showAssistant=true', '_blank')"
-          style="cursor: pointer;">
-          <img src="assets/images/archade-home.png" alt="Archade Vibe Code" loading="lazy"
-            style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;" />
-        </div>
-
-        <!-- AI ASSETS -->
-        <div class="work__card" data-tags="Concept Acceleration &bull; Visual Prototyping"
-          data-desc="AI as a creative multiplier"
-          data-right-text="Curated cosmos of 3D forms, motion drafts, and asset generation demonstrating speed and premium output."
-          data-title="AI Assets" data-title-dark="true" onclick="window.location.href='ai-assets.html'"
-          style="cursor: pointer;">
-          <img src="assets/images/ai-assets-home.png" alt="AI Assets Cosmos" loading="lazy"
-            style="width: 100%; height: 400px; object-fit: cover; border-radius: 12px;" />
-        </div>
-
-      </div>
-
-      <!-- Right Sticky Sidebar -->
-      <div class="work__sidebar-right">
-        <div class="work__sidebar-right-content">
-          <p class="work__sidebar-note" id="work-sidebar-note">Designed to encourage outdoor activity through play.</p>
-          <h2 class="work__sidebar-title" id="work-sidebar-title">Banjaro</h2>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -455,32 +290,70 @@
 
   </section>
 
-<!-- ===== SECTION 6: SKILLS ===== -->
-  <section class="skills" id="skills">
-    <div class="skills__sticky-bg">
-      <div class="skills__bg-glow"></div>
-      <div class="skills__static-top-left">MY SKILLS</div>
-      <div class="skills__static-bottom-left">2023-26</div>
-    </div>
-    <div class="skills__credits-container">
-      <div class="skills__credit-block">
-        <div>UX STRATEGY</div>
-        <div>PRODUCT THINKING</div>
-        <div>INTERACTION DESIGN</div>
-        <div>VISUAL IDENTITY</div>
+<!-- ===== SECTION 4: HOBBIES / STORYTELLING ===== -->
+  <section class="hobbies" id="storytelling">
+    <!-- Red glow follows mouse -->
+    <div class="hobbies__glow"></div>
+
+    <div class="hobbies__sticky">
+      <!-- Icon slides — each hobby has 2 icons -->
+      <div class="hobbies__slide is-active" data-index="0">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-headphones.png" alt="Headphones" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-lamp.png" alt="Desk Lamp" />
       </div>
-      <div class="skills__credit-block">
-        <div>SAAS</div>
-        <div>COMMERCIAL</div>
-        <div>B2B</div>
-        <div>WEB 3</div>
-        <div>AI</div>
+      <div class="hobbies__slide" data-index="1">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-microphone.png" alt="Microphone" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-sneakers.png" alt="Sneakers" />
       </div>
-      <div class="skills__credit-block">
-        <div>VIBE CODING</div>
-        <div>FIGMA</div>
-        <div>FRAMER</div>
+      <div class="hobbies__slide" data-index="2">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-table.png" alt="Drafting Table" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-lamp.png" alt="Desk Lamp" />
       </div>
+      <div class="hobbies__slide" data-index="3">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-skateboard.png" alt="Skateboard" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-sneakers.png" alt="Sneakers" />
+      </div>
+      <div class="hobbies__slide" data-index="4">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-sneakers.png" alt="Sneakers" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-backpack.png" alt="Backpack" />
+      </div>
+      <div class="hobbies__slide" data-index="5">
+        <img class="hobbies__icon hobbies__icon--bl" src="assets/images/hobby-backpack.png" alt="Backpack" />
+        <img class="hobbies__icon hobbies__icon--tr" src="assets/images/hobby-table.png" alt="Drafting Table" />
+      </div>
+
+      <!-- 3D Text Flipper — heading + body rotate as one frame -->
+      <div class="hobbies__flipper-viewport">
+        <div class="hobbies__flipper" id="hobbiesFlip">
+          <div class="hobbies__flip-face is-active" data-face="0">
+            <h3>i love storytelling</h3>
+            <p>But not in conventional way</p>
+          </div>
+          <div class="hobbies__flip-face" data-face="1">
+            <h3>i test ideas in public</h3>
+            <p>Iteration is my stage</p>
+          </div>
+          <div class="hobbies__flip-face" data-face="2">
+            <h3>i think in visuals</h3>
+            <p>Concept first. Tools later</p>
+          </div>
+          <div class="hobbies__flip-face" data-face="3">
+            <h3>i move with balance</h3>
+            <p>Momentum matters in design</p>
+          </div>
+          <div class="hobbies__flip-face" data-face="4">
+            <h3>i embrace the edge</h3>
+            <p>Risk creates identity</p>
+          </div>
+          <div class="hobbies__flip-face" data-face="5">
+            <h3>i explore cultures</h3>
+            <p>Context shapes experience</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- View work button -->
+      <a href="#work" class="hobbies__cta">View work</a>
     </div>
   </section>
 
