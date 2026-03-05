@@ -51,38 +51,62 @@ function initNavToggle() {
     const workLink = document.getElementById('nav-work-link');
     const logoLink = document.getElementById('nav-logo-link');
 
-    const sectionsToToggle = [
-        document.getElementById('hero'),
-        document.getElementById('journey'),
-        document.getElementById('skills')
-    ];
+    // Elements only on index.html
+    const heroSection = document.getElementById('hero');
+    const skillsSection = document.getElementById('skills');
+    // Elements on both pages
+    const journeySection = document.getElementById('journey');
+    const workSection = document.getElementById('work');
 
     if (!workLink || !logoLink) return;
 
-    // Show only work section
+    // Check if we are currently on the index.html page
+    // workSection only exists on index.html
+    const isHomePage = !!workSection;
+
+    // Click "Work"
     workLink.addEventListener('click', (e) => {
-        // e.preventDefault(); // allow it to scroll to #work if needed, or keep preventDefault
-        sectionsToToggle.forEach(sec => {
-            if (sec) sec.style.display = 'none';
-        });
-        // We ensure work section is visible and we scroll to it
-        const workSection = document.getElementById('work');
+        if (!isHomePage) {
+            // Let the standard link navigate to index.html#work
+            return;
+        }
+
+        e.preventDefault();
+
+        // Hide other sections on home page
+        if (heroSection) heroSection.style.display = 'none';
+        if (journeySection) journeySection.style.display = 'none';
+        if (skillsSection) skillsSection.style.display = 'none';
+
         if (workSection) {
             workSection.style.display = 'block';
             workSection.scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Update URL hash without causing a jump
+        history.pushState(null, null, '#work');
     });
 
-    // Show all sections
+    // Click "Samridhi aggarwal"
     logoLink.addEventListener('click', (e) => {
         e.preventDefault();
-        sectionsToToggle.forEach(sec => {
-            if (sec) sec.style.display = ''; // revert to default css display
-        });
-        const workSection = document.getElementById('work');
+
+        if (!isHomePage) {
+            // If on about page, go to index.html
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Only on home page, reveal everything
+        if (heroSection) heroSection.style.display = '';
+        if (journeySection) journeySection.style.display = '';
+        if (skillsSection) skillsSection.style.display = '';
         if (workSection) workSection.style.display = '';
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Remove hash from URL
+        history.pushState(null, null, window.location.pathname);
     });
 }
 

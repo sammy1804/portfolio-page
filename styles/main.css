@@ -1464,10 +1464,10 @@ img {
   max-width: 320px;
   border-radius: 16px;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
-  margin-top: -100px;
-  /* shift up to avoid 10k folder */
-  margin-left: 50px;
-  /* shift right to avoid overlap */
+  margin-top: -300px;
+  /* Shift way up to avoid 10k folder */
+  margin-left: 200px;
+  /* Shift right to avoid overlap */
 }
 
 .journey__hover-img.img-mobile-screen {
