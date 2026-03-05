@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initLoader();
     initNavScroll();
+    initNavToggle();
     initHeroScroll();
     initHobbies();
     initWorkFilters();
@@ -41,6 +42,48 @@ function initNavScroll() {
             nav.classList.remove('scrolled');
         }
     }, { passive: true });
+}
+
+// ====================================
+//  NAV TOGGLE (Show/Hide Sections)
+// ====================================
+function initNavToggle() {
+    const workLink = document.getElementById('nav-work-link');
+    const logoLink = document.getElementById('nav-logo-link');
+
+    const sectionsToToggle = [
+        document.getElementById('hero'),
+        document.getElementById('journey'),
+        document.getElementById('skills')
+    ];
+
+    if (!workLink || !logoLink) return;
+
+    // Show only work section
+    workLink.addEventListener('click', (e) => {
+        // e.preventDefault(); // allow it to scroll to #work if needed, or keep preventDefault
+        sectionsToToggle.forEach(sec => {
+            if (sec) sec.style.display = 'none';
+        });
+        // We ensure work section is visible and we scroll to it
+        const workSection = document.getElementById('work');
+        if (workSection) {
+            workSection.style.display = 'block';
+            workSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Show all sections
+    logoLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        sectionsToToggle.forEach(sec => {
+            if (sec) sec.style.display = ''; // revert to default css display
+        });
+        const workSection = document.getElementById('work');
+        if (workSection) workSection.style.display = '';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 }
 
 // ====================================
@@ -236,118 +279,121 @@ function initWorkFilters() {
 //  JOURNEY HOVERS (Wabi.ai Style)
 // ====================================
 function initJourneyHovers() {
-    const highlights = document.querySelectorAll('.journey__highlight');
+    const blocks = document.querySelectorAll('.journey__block');
     const hoverGlass = document.getElementById('journey-hover-glass');
+    const journeySection = document.getElementById('journey');
 
-    if (!highlights.length || !hoverGlass) return;
+    if (!blocks.length || !hoverGlass || !journeySection) return;
 
     let activeImages = [];
     let targetX = 0, targetY = 0;
     let smoothX = 0, smoothY = 0;
     let isTracking = false;
+    let currentActiveBlock = null;
 
     // Smooth lerping for the floating effect
     function animate() {
         if (!isTracking && !activeImages.length) return;
 
-        // Lerp towards target
         smoothX += (targetX - smoothX) * 0.1;
         smoothY += (targetY - smoothY) * 0.1;
 
         activeImages.forEach((img, i) => {
-            // Apply different parallax speeds/directions to make it feel organic
             const speed = 0.04 + (i * 0.02);
             const dirX = i % 2 === 0 ? 1 : -1;
             const dirY = i % 2 === 0 ? -1 : 1;
-
-            // Note: Transform applies on top of their absolute layout placement in CSS
             img.style.transform = `translate(${smoothX * speed * dirX}px, ${smoothY * speed * dirY}px) scale(1)`;
         });
 
         requestAnimationFrame(animate);
     }
 
-    highlights.forEach(highlight => {
-        highlight.addEventListener('mouseenter', (e) => {
-            const imgId = highlight.dataset.hover;
-            const imgs = hoverGlass.querySelectorAll(`.journey__hover-img[data-img="${imgId}"]`);
+    function activateBlock(block, mouseX, mouseY) {
+        if (currentActiveBlock === block) return;
+        currentActiveBlock = block;
 
-            // Hide previous active images
-            activeImages.forEach(img => img.classList.remove('visible'));
+        const highlights = block.querySelectorAll('.journey__highlight');
+        let imgIds = Array.from(highlights).map(h => h.dataset.hover).filter(Boolean);
 
-            if (!imgs.length) {
-                activeImages = [];
-                isTracking = false;
-                const journeySection = document.getElementById('journey');
-                if (journeySection) {
-                    journeySection.classList.remove('is-hovering');
-                    journeySection.classList.remove('is-dark-theme');
-                    journeySection.removeAttribute('data-active-hover');
-                }
-                return;
-            }
+        // Hide previous
+        activeImages.forEach(img => img.classList.remove('visible'));
 
-            activeImages = Array.from(imgs);
+        if (!imgIds.length) {
+            activeImages = [];
+            journeySection.classList.remove('is-hovering', 'is-dark-theme');
+            journeySection.removeAttribute('data-active-hover');
+            return;
+        }
 
-            // Set initial mouse position
-            const rect = hoverGlass.getBoundingClientRect();
-            targetX = e.clientX - rect.width / 2;
-            targetY = e.clientY - rect.height / 2;
-
-            // If we weren't tracking before, snap smoothX/Y so they don't fly in from corner
-            if (!isTracking) {
-                smoothX = targetX;
-                smoothY = targetY;
-                const journeySection = document.getElementById('journey');
-                if (journeySection) journeySection.classList.add('is-hovering');
-            }
-
-            const journeySection = document.getElementById('journey');
-            if (journeySection) {
-                const darkTriggers = ['shifting-scale'];
-                if (darkTriggers.includes(imgId)) {
-                    journeySection.classList.add('is-dark-theme');
-                } else {
-                    journeySection.classList.remove('is-dark-theme');
-                }
-                journeySection.setAttribute('data-active-hover', imgId);
-            }
-
-            activeImages.forEach(img => {
-                img.classList.add('visible');
-                // Ensure initial transform matches so it doesn't jump
-                const i = activeImages.indexOf(img);
-                const speed = 0.04 + (i * 0.02);
-                const dirX = i % 2 === 0 ? 1 : -1;
-                const dirY = i % 2 === 0 ? -1 : 1;
-                img.style.transform = `translate(${smoothX * speed * dirX}px, ${smoothY * speed * dirY}px) scale(1)`;
-            });
-
-            // Mark the active highlight text
-            highlights.forEach(h => h.classList.remove('is-active'));
-            highlight.classList.add('is-active');
-
-            if (!isTracking) {
-                isTracking = true;
-                animate();
-            }
+        // Gather all matching images for this block
+        const imgs = [];
+        imgIds.forEach(id => {
+            const foundImgs = hoverGlass.querySelectorAll(`.journey__hover-img[data-img="${id}"]`);
+            foundImgs.forEach(img => imgs.push(img));
         });
 
-        highlight.addEventListener('mouseleave', () => {
-            highlight.classList.remove('is-active');
-            activeImages.forEach(img => img.classList.remove('visible'));
-            activeImages = [];
-            isTracking = false;
+        activeImages = Array.from(new Set(imgs)); // unique
 
-            const journeySection = document.getElementById('journey');
-            if (journeySection) {
-                journeySection.classList.remove('is-hovering');
-                journeySection.classList.remove('is-dark-theme');
-            }
+        if (!activeImages.length) {
+            journeySection.classList.remove('is-hovering', 'is-dark-theme');
+            journeySection.removeAttribute('data-active-hover');
+            return;
+        }
+
+        const rect = hoverGlass.getBoundingClientRect();
+        targetX = mouseX !== undefined ? mouseX - rect.width / 2 : 0;
+        targetY = mouseY !== undefined ? mouseY - rect.height / 2 : 0;
+
+        if (!isTracking) {
+            smoothX = targetX;
+            smoothY = targetY;
+            journeySection.classList.add('is-hovering');
+        } else {
+            journeySection.classList.add('is-hovering');
+        }
+
+        const darkTriggers = ['shifting-scale'];
+        const isDark = imgIds.some(id => darkTriggers.includes(id));
+        if (isDark) journeySection.classList.add('is-dark-theme');
+        else journeySection.classList.remove('is-dark-theme');
+
+        journeySection.setAttribute('data-active-hover', imgIds.join(' '));
+
+        activeImages.forEach((img, i) => {
+            img.classList.add('visible');
+            const speed = 0.04 + (i * 0.02);
+            const dirX = i % 2 === 0 ? 1 : -1;
+            const dirY = i % 2 === 0 ? -1 : 1;
+            img.style.transform = `translate(${smoothX * speed * dirX}px, ${smoothY * speed * dirY}px) scale(1)`;
+        });
+
+        // Toggle highlights
+        document.querySelectorAll('.journey__highlight').forEach(h => h.classList.remove('is-active'));
+        highlights.forEach(h => h.classList.add('is-active'));
+
+        if (!isTracking) {
+            isTracking = true;
+            animate();
+        }
+    }
+
+    function deactivateAll() {
+        currentActiveBlock = null;
+        document.querySelectorAll('.journey__highlight').forEach(h => h.classList.remove('is-active'));
+        activeImages.forEach(img => img.classList.remove('visible'));
+        activeImages = [];
+        isTracking = false;
+        journeySection.classList.remove('is-hovering', 'is-dark-theme');
+        journeySection.removeAttribute('data-active-hover');
+    }
+
+    blocks.forEach(block => {
+        // Activate on mouseenter (hover)
+        block.addEventListener('mouseenter', (e) => {
+            activateBlock(block, e.clientX, e.clientY);
         });
     });
 
-    // Track mouse globally while active
     document.addEventListener('mousemove', (e) => {
         if (!isTracking) return;
         const rect = hoverGlass.getBoundingClientRect();
@@ -355,9 +401,12 @@ function initJourneyHovers() {
         targetY = e.clientY - rect.height / 2;
     });
 
-    const journeySection = document.getElementById('journey');
+    // Deactivate when mouse fully leaves the entire journey section
+    journeySection.addEventListener('mouseleave', () => {
+        deactivateAll();
+    });
 
-    // Also dim text when hovering over scribbles (which might not trigger images but still act as interactives)
+    // Dim text logic for scribbles
     const scribbles = document.querySelectorAll('.journey__scribble');
     scribbles.forEach(scribble => {
         scribble.addEventListener('mouseenter', () => {
@@ -370,15 +419,35 @@ function initJourneyHovers() {
         });
     });
 
-    // Hide if clicking outside or leaving the journey section
-    if (journeySection) {
-        journeySection.addEventListener('mouseleave', () => {
-            activeImages = [];
-            isTracking = false;
-            journeySection.classList.remove('is-hovering');
-            journeySection.classList.remove('is-dark-theme');
+    // Scroll Logic
+    const observerOptions = {
+        root: null,
+        rootMargin: '-30% 0px -40% 0px', // triggers when the block enters the center part of the viewport
+        threshold: 0.1
+    };
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // If the user's mouse is not actively inside the journey section controlling things,
+                // let the scroll seamlessly activate the in-view block.
+                if (!journeySection.matches(':hover')) {
+                    activateBlock(entry.target);
+                }
+            }
         });
-    }
+    }, observerOptions);
+
+    blocks.forEach(block => scrollObserver.observe(block));
+
+    // Cleanup when journey section is entirely scrolled out of view
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                deactivateAll();
+            }
+        });
+    }, { threshold: 0 });
+    sectionObserver.observe(journeySection);
 }
 
 // ====================================
