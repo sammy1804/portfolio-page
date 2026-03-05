@@ -11,6 +11,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        about: resolve(__dirname, 'about.html'),
         ai_assets: resolve(__dirname, 'ai-assets.html'),
         banjaro: resolve(__dirname, 'banjaro.html'),
         credflow: resolve(__dirname, 'credflow.html'),
