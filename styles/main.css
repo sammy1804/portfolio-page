@@ -1464,10 +1464,6 @@ img {
   max-width: 320px;
   border-radius: 16px;
   filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3));
-  margin-top: -160px;
-  /* Shift up to clear 10k folder, but stay in view */
-  margin-left: 20px;
-  /* Slight right shift */
 }
 
 .journey__hover-img.img-mobile-screen {
