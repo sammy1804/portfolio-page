@@ -151,8 +151,10 @@ img {
 .nav {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 100vw;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -865,8 +867,8 @@ img {
 .work__cards-column {
   display: flex;
   flex-direction: column;
-  gap: 10vh;
-  /* Spacing between cards to scroll single view */
+  gap: 30vh;
+  /* Increased spacing so cards don't overlap on scroll and you can read the sidebars properly */
   padding-bottom: 20vh;
 }
 
@@ -1246,8 +1248,8 @@ img {
 /* Dimming override for Dark Theme */
 .journey.is-hovering.is-dark-theme .journey__block-title,
 .journey.is-hovering.is-dark-theme .journey__block-text {
-  color: #444;
-  /* Darker grey when dimmed in dark mode */
+  color: #a0a0a0;
+  /* Lighter grey when dimmed in dark mode for visibility */
 }
 
 /* Keep highlights visually 'solid' even when inactive */
@@ -1308,7 +1310,7 @@ img {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   pointer-events: none;
   z-index: 1;
@@ -1442,7 +1444,7 @@ img {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   object-fit: cover;
   opacity: 0.06 !important;
