@@ -18,7 +18,10 @@ export default defineConfig({
         flight_op: resolve(__dirname, 'flight-op.html'),
         intract: resolve(__dirname, 'intract.html'),
         z42: resolve(__dirname, 'z42.html'),
-        case_study_template: resolve(__dirname, 'case-study-template.html')
+        case_study_template: resolve(__dirname, 'case-study-template.html'),
+        promena: resolve(__dirname, 'promena.html'),
+        sarvoma: resolve(__dirname, 'sarvoma.html'),
+        upcoming: resolve(__dirname, 'upcoming.html')
       }
     }
   }
